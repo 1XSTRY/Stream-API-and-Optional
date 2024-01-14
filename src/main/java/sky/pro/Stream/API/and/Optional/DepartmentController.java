@@ -13,7 +13,6 @@ public class DepartmentController {
 
     private final DepartmentService departmentService;
 
-    @Autowired
     public DepartmentController(DepartmentService departmentService) {
         this.departmentService = departmentService;
     }
@@ -37,4 +36,9 @@ public class DepartmentController {
     public Map<Integer, List<Employee>> getAllEmployeesGroupedByDepartment() {
         return departmentService.getAllEmployeesGroupedByDepartment();
     }
+    @GetMapping("/departments")
+    public List<Employee> getAllEmployees() {
+        return departmentService.getAllEmployees();
+    }
+
 }
