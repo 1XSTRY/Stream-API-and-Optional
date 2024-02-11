@@ -26,5 +26,9 @@ public class EmployeeService {
         }
     }
 
+    public void removeEmployee(int employeeId) {
+        employees.removeIf(employee -> employee.getId() == employeeId);
+    }
+
 
 }

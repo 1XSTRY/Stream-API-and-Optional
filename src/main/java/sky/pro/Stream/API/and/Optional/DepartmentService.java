@@ -10,43 +10,40 @@ import java.util.stream.Collectors;
 
 @Service
 public class DepartmentService {
-
     private final EmployeeService employeeService;
 
-    @Autowired
     public DepartmentService(EmployeeService employeeService) {
         this.employeeService = employeeService;
     }
 
-    public Employee getEmployeeWithMaxSalary(int departmentId) {
-        List<Employee> employees = employeeService.getAllEmployees();
-        return employees.stream()
-                .filter(e -> e.getDepartmentId() == departmentId)
-                .max(Comparator.comparingDouble(Employee::getSalary))
-                .orElse(null);
-    }
-
-    public Employee getEmployeeWithMinSalary(int departmentId) {
-        List<Employee> employees = employeeService.getAllEmployees();
-        return employees.stream()
-                .filter(e -> e.getDepartmentId() == departmentId)
-                .min(Comparator.comparingDouble(Employee::getSalary))
-                .orElse(null);
-    }
-
-    public List<Employee> getAllEmployeesByDepartment(int departmentId) {
-        List<Employee> employees = employeeService.getAllEmployees();
-        return employees.stream()
+    public List<Employee> getEmployeesByDepartment(int departmentId) {
+        return employeeService.getAllEmployees().stream()
                 .filter(e -> e.getDepartmentId() == departmentId)
                 .collect(Collectors.toList());
     }
 
-    public Map<Integer, List<Employee>> getAllEmployeesGroupedByDepartment() {
-        List<Employee> employees = employeeService.getAllEmployees();
-        return employees.stream()
-                .collect(Collectors.groupingBy(Employee::getDepartmentId));
+    public double getSalarySumByDepartment(int departmentId) {
+        return getEmployeesByDepartment(departmentId).stream()
+                .mapToDouble(Employee::getSalary)
+                .sum();
     }
-    public List<Employee> getAllEmployees() {
-        return employeeService.getAllEmployees();
+
+    public double getMaxSalaryByDepartment(int departmentId) {
+        return getEmployeesByDepartment(departmentId).stream()
+                .mapToDouble(Employee::getSalary)
+                .max()
+                .orElse(0);
+    }
+
+    public double getMinSalaryByDepartment(int departmentId) {
+        return getEmployeesByDepartment(departmentId).stream()
+                .mapToDouble(Employee::getSalary)
+                .min()
+                .orElse(0);
+    }
+
+    public Map<Integer, List<Employee>> getAllEmployeesGroupedByDepartment() {
+        return employeeService.getAllEmployees().stream()
+                .collect(Collectors.groupingBy(Employee::getDepartmentId));
     }
 }
